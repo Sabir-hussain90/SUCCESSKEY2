@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 
@@ -75,9 +75,9 @@ const ALL_SUBJECTS = [
 ];
 
 // ============================================
-// MAIN COMPONENT
+// QUIZ CONTENT COMPONENT (uses useSearchParams)
 // ============================================
-export default function QuizPage() {
+function QuizContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const subjectId = searchParams ? searchParams.get('id') : null;
@@ -914,5 +914,16 @@ export default function QuizPage() {
         )
       ) :
       null
+  );
+}
+
+// ============================================
+// MAIN PAGE COMPONENT with Suspense
+// ============================================
+export default function QuizPage() {
+  return React.createElement(
+    React.Suspense,
+    { fallback: React.createElement("div", { style: { padding: '40px', textAlign: 'center' } }, "Loading quiz...") },
+    React.createElement(QuizContent, null)
   );
 }
